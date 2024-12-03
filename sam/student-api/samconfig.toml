@@ -16,6 +16,11 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
+s3_prefix = "student-api3"
+region = "us-east-1"
+disable_rollback = true
+image_repositories = []
+stack_name = "student-api3"
 
 [default.package.parameters]
 resolve_s3 = true
