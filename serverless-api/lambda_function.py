@@ -83,8 +83,44 @@ def saveAsset(requestBody):
     except:
         logger.exception('There is something wrong and handler is not working properly in saveAsset request')
         
-def modify
-                             
+def modifyAsset(assetid, updateKey, updateValue):
+    try:
+        response = table.update_item(
+            key = {
+                'assetid' : assetid
+            },
+            updateExpression='set %s = : value' % updateKey,
+            ExpressionAttributeValue={
+                ':value' : updateValue
+            },
+            returnValue='UPDATE_NEW'
+        )
+        body = {
+            'Operation' : 'UPDATE',
+            'Message' : 'SUCCESS',
+            'UpdateAttribute' : response
+        }
+        return buildResponse(200, body)
+    except:
+        logger.exception('There is something wrong and handler is not working properly in modifyAsset request')
+        
+def deleteAsset(assetid):
+    try:
+        response = table.delete_item(
+            key={
+                'assetid' : assetid
+            },
+            ReturnValues='ALL_OLD'
+        )
+        body = {
+            'Operation' : 'DELETE',
+            'Message' : 'SUCCESS',
+            'deleteItem' : response
+        }
+        return buildResponse(200, body)
+    except:
+        logger.exception('There is something wrong and handler is not working properly in deleteAsset request')
+        
         
 def buildResponse(statusCode, body=None):
     response = {
