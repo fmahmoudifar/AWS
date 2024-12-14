@@ -17,7 +17,7 @@ healthPath = '/health'
 assetPath = '/asset'
 assetsPath = '/assets'
 
-def lambda_handler(event, context)
+def lambda_handler(event, context):
     logger.info(event)
     httpMethod = event['httpMethod']
     path = event['path']
@@ -34,16 +34,16 @@ def lambda_handler(event, context)
         response = modifyAsset(requestBody['assetid'], requestBody['updateKey'], requestBody['updateValue'])
     elif httpMethod == deleteMethod and path == assetPath:
         requestBody = json.loads(event['body'])
-        response = deleteMethod(requestBody['assetid'])
+        response = deleteAsset(requestBody['assetid'])
     else:
         response = buildResponse(404, 'Not Found')
         
     return response
 
-def getasset(assetid):
+def getAsset(assetid):
     try:
         response = table.get_item(
-            key= {
+            Key= {
                 'assetid' : assetid
             }
         )
@@ -57,14 +57,14 @@ def getasset(assetid):
 def getAssets():
     try:
         response = table.scan()
-        result = response['Item']
+        result = response['Items']
         
         while 'LastEvaluatedKey' in response:
             response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
-            result.extend(response['Item'])
+            result.extend(response['Items'])
             
         body = {
-            'assets' : response
+            'assets' : result
         }
         return buildResponse(200, body)
     
